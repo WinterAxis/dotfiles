@@ -1,0 +1,4 @@
+set editing-mode vi
+set show-mode-in-prompt on
+set vi-ins-mode-string \1\033[1;32m\2I\1\033[m\2
+set vi-cmd-mode-string \1\033[1;31m\2N\1\033[m\2
