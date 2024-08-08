@@ -1,3 +1,5 @@
+starship:
+	ln -s ~/dotfiles/.config/starship.toml ~/.config/starship.toml
 nvim:
 	ln -s ~/dotfiles/.config/nvim ~/.config/nvim
 tmux: 
