@@ -19,21 +19,41 @@ nvim:
 
 tmux: 
 	ln -sf ~/dotfiles/.tmux.conf ~/.tmux.conf
-	git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+	@echo "Checking if ~/.tmux/plugins/tpm already exists..."
+	@if [ -d ~/.tmux/plugins/tpm ]; then \
+		echo "Warning: ~/.tmux/plugins/tpm already exists. Skipping clone."; \
+	else \
+		echo "Cloning TPM..."; \
+		git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm; \
+	fi
 
 # Tools
 tools: lazygit fzf
 
 lazygit:
-	curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
-	tar xf lazygit.tar.gz lazygit
-	sudo install lazygit ~/.local/bin/
-	rm lazygit lazygit.tar.gz
+	@echo "Checking if lazygit is already installed..."
+	@if command -v lazygit >/dev/null 2>&1; then \
+		echo "lazygit is already installed. Skipping installation."; \
+	else \
+		echo "Installing lazygit..."; \
+		curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"; \
+		tar xf lazygit.tar.gz lazygit; \
+		sudo install lazygit ~/.local/bin/; \
+		rm lazygit lazygit.tar.gz; \
+	fi
 
 fzf:
+	@echo "Checking if ~/.fzf already exists..."
+	@if [ -d ~/.fzf ]; then \
+		echo "Warning: ~/.fzf already exists. Skipping clone."; \
+	else \
+		echo "Cloning fzf..."; \
+		git clone --depth 1 "https://github.com/junegunn/fzf.git" ~/.fzf; \
+	fi
+	@echo "Running fzf installer..."
+	(echo y; echo n; echo n;) | ~/.fzf/install
+	rm -f ~/.fzf.bash
 	ln -sf ~/dotfiles/.fzf.bash ~/.fzf.bash
-	git clone --depth 1 "https://github.com/junegunn/fzf.git" ~/.fzf
-	(echo y; echo y; echo n) | ~/.fzf/install
 
 # Clean up individual items
 clean-bashrc:
