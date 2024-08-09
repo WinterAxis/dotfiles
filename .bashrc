@@ -128,14 +128,6 @@ export PROFILE="~/.bashrc"
 alias profile="editor $PROFILE"
 alias reload="source $PROFILE"
 
-# Vi mode
-# set -o vi
-# bind 'set show-mode-in-prompt on'
-# bind 'set vi-cmd-mode-string "\[\033[1;33m\]N\[\033[0m\]"'
-# bind 'set vi-ins-mode-string "\[\e[1;32m\]I\[\e[0m\]"'
-# bind 'set vi-cmd-mode-string "\\[\\033[1;33m\\]N\\[\\033[0m\\]"'
-# bind 'set vi-cmd-mode-string "\\[\\033[1;32m\\]I\\[\\033[0m\\]"'
-
 # FZF
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
