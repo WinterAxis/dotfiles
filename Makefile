@@ -1,6 +1,9 @@
+SHELL := /bin/bash
+
 LAZYGIT_VERSION = $(shell curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": \"v\K[^"]*')
 
 all: dotfiles tools
+	source ~/.bashrc
 
 # dotfiles 
 dotfiles: bashrc inputrc starship nvim tmux
@@ -46,12 +49,13 @@ fzf:
 	@echo "Checking if ~/.fzf already exists..."
 	@if [ -d ~/.fzf ]; then \
 		echo "Warning: ~/.fzf already exists. Skipping clone."; \
+		rm -f ~/.fzf.bash; \
 	else \
 		echo "Cloning fzf..."; \
 		git clone --depth 1 "https://github.com/junegunn/fzf.git" ~/.fzf; \
 	fi
 	@echo "Running fzf installer..."
-	(echo y; echo n; echo n;) | ~/.fzf/install
+	(echo y; echo y; echo n;) | ~/.fzf/install
 	rm -f ~/.fzf.bash
 	ln -sf ~/dotfiles/.fzf.bash ~/.fzf.bash
 
@@ -80,5 +84,5 @@ clean-lazygit:
 	rm -f ~/.local/bin/lazygit
 
 # Clean all items
-clean-all: clean-bashrc clean-inputrc clean-starship clean-nvim clean-tmux clean-fzf clean-lazygit
+clean: clean-bashrc clean-inputrc clean-starship clean-nvim clean-tmux clean-fzf clean-lazygit
 
