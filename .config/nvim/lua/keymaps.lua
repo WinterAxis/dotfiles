@@ -57,9 +57,9 @@ vim.keymap.set('n', 'n', 'nzzzv')
 vim.keymap.set('n', 'N', 'Nzzzv')
 
 -- Paste over selection, pasted text to void register
-vim.keymap.set('x', '<leader>p', [["_dP]])
--- Delete to void register
-vim.keymap.set({ 'n', 'v' }, '<leader>d', [["_d]])
+vim.keymap.set('v', '<leader>p', [["_dP]], { desc = 'Paste over selection' })
+-- Delete to void
+vim.keymap.set('v', '<leader>d', [["_d]], { desc = 'Delete to void register' })
 
 -- [[ Custom Keybinds ]]
 --

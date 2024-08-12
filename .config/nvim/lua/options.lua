@@ -62,4 +62,7 @@ vim.opt.cursorline = true
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
 
+-- Set Conceal level for obsidian.nvim | see :help conceallevel
+vim.opt.conceallevel = 2
+
 -- vim: ts=2 sts=2 sw=2 et
