@@ -6,7 +6,9 @@ fi
 
 # Auto-completion
 # ---------------
-source "~/.fzf/shell/completion.bash"
+if [ -f ~/.fzf/shell/completion.bash ]; then
+  source ~/.fzf/shell/completion.bash
+fi
 
 # Key bindings
 # ------------

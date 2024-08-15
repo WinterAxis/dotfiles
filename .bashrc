@@ -118,7 +118,7 @@ if ! shopt -oq posix; then
 fi
 . "$HOME/.cargo/env"
 
-PATH=~/go/bin/:~/.local/bin/:/home/nalden/.cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+PATH=~/.local/go/bin/:~/.local/bin/:~/.cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
 export EDITOR=$(which nvim)
 export EDIT=$(which nvim)
 export VISUAL=$(which nvim)
