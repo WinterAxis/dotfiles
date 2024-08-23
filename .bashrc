@@ -128,6 +128,12 @@ export PROFILE="~/.bashrc"
 alias profile="editor $PROFILE"
 alias reload="source $PROFILE"
 
+# fnm
+if [ -d ~/.local/share/fnm ]; then
+  export PATH="~/.local/share/fnm:$PATH"
+  eval "`fnm env`"
+fi
+
 # FZF
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 

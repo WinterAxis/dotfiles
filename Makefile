@@ -17,7 +17,7 @@ inputrc:
 starship:
 	ln -sf ~/dotfiles/.config/starship.toml ~/.config/starship.toml
 
-nvim:
+nvim: fnm
 	ln -sf ~/dotfiles/.config/nvim ~/.config/nvim
 
 tmux: 
@@ -31,7 +31,7 @@ tmux:
 	fi
 
 # Tools
-tools: lazygit fzf
+tools: lazygit fzf fnm node
 
 lazygit:
 	@echo "Checking if lazygit is already installed..."
@@ -44,6 +44,16 @@ lazygit:
 		sudo install lazygit ~/.local/bin/; \
 		rm lazygit lazygit.tar.gz; \
 	fi
+
+node: fnm
+	fnm use --install-if-missing 20
+
+fnm:
+	git stash \
+	curl -fsSL https://fnm.vercel.app/install | bash \
+	git restore ./bashrc \
+	git stash pop \
+
 
 fzf:
 	@echo "Checking if ~/.fzf already exists..."
@@ -75,6 +85,9 @@ clean-nvim:
 clean-tmux:
 	rm -f ~/.tmux.conf
 	rm -rf ~/.tmux/plugins/tpm
+
+clean-fnm:
+	rm -rf ~/.local/share/fnm
 
 clean-fzf:
 	rm -f ~/.fzf.bash

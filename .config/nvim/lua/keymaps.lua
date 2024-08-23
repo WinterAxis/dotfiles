@@ -71,4 +71,7 @@ vim.keymap.set('n', '<C-k>', '<cmd>cprev<CR>zz', { desc = 'Move focus to the upp
 vim.keymap.set('n', '<C-h>', '<cmd>lnext<CR>zz', { desc = 'Move focus to the left window' })
 vim.keymap.set('n', '<C-l>', '<cmd>lprev<CR>zz', { desc = 'Move focus to the right window' })
 
+-- Code Block
+vim.keymap.set('n', '<leader>cr', ':r!<C-R><C-L><CR>', { desc = '[C]ode [R]un: Run the current line' })
+vim.keymap.set('n', '<leader>cb', "'[V']c```<CR><C-r>\"```<Esc>'[zz", { desc = '[C]ode [B]lock around last insert or paste' })
 -- vim: ts=2 sts=2 sw=2 et
