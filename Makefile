@@ -51,7 +51,7 @@ node: fnm
 fnm:
 	git stash; \
 	curl -fsSL https://fnm.vercel.app/install | bash; \
-	git restore ./bashrc; \
+	git restore ./.bashrc; \
 	git stash pop; \
 
 
