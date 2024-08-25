@@ -49,10 +49,10 @@ node: fnm
 	fnm use --install-if-missing 20
 
 fnm:
-	git stash \
-	curl -fsSL https://fnm.vercel.app/install | bash \
-	git restore ./bashrc \
-	git stash pop \
+	git stash; \
+	curl -fsSL https://fnm.vercel.app/install | bash; \
+	git restore ./bashrc; \
+	git stash pop; \
 
 
 fzf:
