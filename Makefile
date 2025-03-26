@@ -17,7 +17,7 @@ inputrc:
 starship:
 	ln -sf ~/dotfiles/.config/starship.toml ~/.config/starship.toml
 
-nvim: fnm
+nvim: fnm ripgrep
 	ln -sf ~/dotfiles/.config/nvim ~/.config/nvim
 
 tmux: 
@@ -31,7 +31,25 @@ tmux:
 	fi
 
 # Tools
-tools: lazygit fzf fnm node
+tools: lazygit fzf fnm node btop ripgrep
+
+ripgrep:
+	@echo "Checking if ripgrep is already installed..."
+	@if command -v rg >/dev/null 2>&1; then \
+		echo "ripgrep is already installed. Skipping installation."; \
+	else \
+		echo "Installing ripgrep..."; \
+		sudo apt install ripgrep;\
+	fi
+
+btop:
+	@echo "Checking if btop is already installed..."
+	@if command -v btop >/dev/null 2>&1; then \
+		echo "btop is already installed. Skipping installation."; \
+	else \
+		echo "Installing btop..."; \
+		sudo apt install btop;\
+	fi
 
 lazygit:
 	@echo "Checking if lazygit is already installed..."

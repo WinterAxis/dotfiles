@@ -59,8 +59,8 @@ return {
         --
         defaults = {
           mappings = {
-            i = { ['<C-q>'] = actions.smart_send_to_qflist + actions.open_qflist },
-            n = { ['<C-q>'] = actions.smart_send_to_qflist + actions.open_qflist },
+            i = { ['<C-q>'] = actions.smart_send_to_qflist + actions.open_qflist, ['<C-d>'] = actions.delete_buffer },
+            n = { ['<C-q>'] = actions.smart_send_to_qflist + actions.open_qflist, ['<C-d>'] = actions.delete_buffer },
           },
         },
         -- pickers = {}

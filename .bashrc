@@ -106,6 +106,14 @@ if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
 
+# dark
+alias dark='gsettings set org.gnome.desktop.interface gtk-theme Adwaita-dark \
+&& gsettings set org.gnome.desktop.interface color-scheme prefer-dark'
+# light
+alias light='gsettings set org.gnome.desktop.interface gtk-theme Adwaita \
+&& gsettings set org.gnome.desktop.interface color-scheme prefer-light'
+
+
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).
@@ -116,7 +124,8 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
-. "$HOME/.cargo/env"
+#  commented because I forgot why I needed this
+# . "$HOME/.cargo/env"
 
 PATH=~/.local/go/bin/:~/.local/bin/:~/.cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
 export EDITOR=$(which nvim)
