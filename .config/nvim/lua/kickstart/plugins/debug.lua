@@ -5,6 +5,7 @@
 -- Primarily focused on configuring the debugger for Go, but can
 -- be extended to other languages as well. That's why it's called
 -- kickstart.nvim and not kitchen-sink.nvim ;)
+local last_executable = nil
 
 return {
   -- NOTE: Yes, you can install new plugins here!
@@ -21,28 +22,41 @@ return {
     'williamboman/mason.nvim',
     'jay-babu/mason-nvim-dap.nvim',
 
+    'Civitasv/cmake-tools.nvim',
+
     -- Add your own debuggers here
-    'leoluz/nvim-dap-go',
+    -- 'leoluz/nvim-dap-go',
   },
   keys = function(_, keys)
     local dap = require 'dap'
     local dapui = require 'dapui'
     return {
-      -- Basic debugging keymaps, feel free to change to your liking!
-      { '<F5>', dap.continue, desc = 'Debug: Start/Continue' },
-      { '<F1>', dap.step_into, desc = 'Debug: Step Into' },
-      { '<F2>', dap.step_over, desc = 'Debug: Step Over' },
-      { '<F3>', dap.step_out, desc = 'Debug: Step Out' },
-      { '<leader>b', dap.toggle_breakpoint, desc = 'Debug: Toggle Breakpoint' },
+      -- Core controls
+      { '<leader>dd', dap.continue, desc = 'Debug: Start/Continue' },
+      { '<leader>dx', dap.terminate, desc = 'Debug: Terminate' },
+      { '<leader>dr', dap.restart, desc = 'Debug: Restart' },
+      { '<leader>dp', dap.pause, desc = 'Debug: Pause Execution' },
+      { '<leader>dc', dap.run_to_cursor, desc = 'Debug: Run to Cursor' },
+      { '<leader>dl', dap.run_last, desc = 'Debug: Run Last Session' },
+
+      -- Stepping
+      { '<leader>dn', dap.step_over, desc = 'Debug: Step Over (Next)' },
+      { '<leader>di', dap.step_into, desc = 'Debug: Step Into' },
+      { '<leader>do', dap.step_out, desc = 'Debug: Step Out' },
+
+      -- Breakpoints
+      { '<leader>db', dap.toggle_breakpoint, desc = 'Debug: Toggle Breakpoint' },
       {
-        '<leader>B',
+        '<leader>dB',
         function()
           dap.set_breakpoint(vim.fn.input 'Breakpoint condition: ')
         end,
         desc = 'Debug: Set Breakpoint',
       },
-      -- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
-      { '<F7>', dapui.toggle, desc = 'Debug: See last session result.' },
+
+      -- UI / Info
+      { '<leader>du', dapui.toggle, desc = 'Debug: Toggle UI' },
+      { '<leader>de', dapui.eval, desc = 'Debug: Evaluate Expresstion' },
       unpack(keys),
     }
   end,
@@ -51,21 +65,62 @@ return {
     local dapui = require 'dapui'
 
     require('mason-nvim-dap').setup {
-      -- Makes a best effort to setup the various debuggers with
-      -- reasonable debug configurations
       automatic_installation = true,
-
-      -- You can provide additional configuration to the handlers,
-      -- see mason-nvim-dap README for more information
       handlers = {},
-
-      -- You'll need to check that you have the required things installed
-      -- online, please don't ask me how to install them :)
       ensure_installed = {
         -- Update this to ensure that you have the debuggers for the langs you want
-        'delve',
+        -- 'delve',
       },
     }
+
+    -- System LLDB (NixOS-safe) configuration
+    dap.adapters.lldb = {
+      type = 'executable',
+      command = vim.fn.exepath('lldb-dap'), -- system path from Nix
+      name = 'lldb',
+    }
+
+    -- local last_executable = nil
+
+    dap.configurations.c = {
+      {
+        name = 'Launch C program',
+        type = 'lldb',
+        request = 'launch',
+        program = function()
+          -- This code runs ONLY when starting the debugger
+          local cmake = require('cmake-tools')  -- lazy load here, not at module load
+
+          -- Use cached executable if available
+          if last_executable and vim.fn.filereadable(last_executable) == 1 then
+            return last_executable
+          end
+
+          -- Try CMake launch target
+          local target = cmake.get_launch_target_path()
+          if target and vim.fn.filereadable(target) == 1 then
+            last_executable = target
+            return target
+          end
+
+          -- Last resort: prompt the user
+          local build_dir = vim.fn.getcwd() .. '/build'
+          last_executable = vim.fn.input('Path to executable: ', build_dir .. '/', 'file')
+          return last_executable
+        end,
+        -- program = function()
+        --   return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+        -- end,
+        cwd = '${workspaceFolder}',
+        stopOnEntry = false,
+        args = function()
+          local cmake = require('cmake-tools')
+          return cmake.get_launch_args()
+        end,
+      },
+    }
+
+    -- dap.configurations.cpp = dap.configurations.c
 
     -- Dap UI setup
     -- For more information, see |:help nvim-dap-ui|
@@ -74,19 +129,19 @@ return {
       --    Feel free to remove or use ones that you like more! :)
       --    Don't feel like these are good choices.
       icons = { expanded = '▾', collapsed = '▸', current_frame = '*' },
-      controls = {
-        icons = {
-          pause = '⏸',
-          play = '▶',
-          step_into = '⏎',
-          step_over = '⏭',
-          step_out = '⏮',
-          step_back = 'b',
-          run_last = '▶▶',
-          terminate = '⏹',
-          disconnect = '⏏',
-        },
-      },
+      -- controls = {
+      --   icons = {
+      --     pause = '⏸',
+      --     play = '▶',
+      --     step_into = '⏎',
+      --     step_over = '⏭',
+      --     step_out = '⏮',
+      --     step_back = 'b',
+      --     run_last = '▶▶',
+      --     terminate = '⏹',
+      --     disconnect = '⏏',
+      --   },
+      -- },
     }
 
     dap.listeners.after.event_initialized['dapui_config'] = dapui.open
@@ -94,12 +149,12 @@ return {
     dap.listeners.before.event_exited['dapui_config'] = dapui.close
 
     -- Install golang specific config
-    require('dap-go').setup {
-      delve = {
-        -- On Windows delve must be run attached or it crashes.
-        -- See https://github.com/leoluz/nvim-dap-go/blob/main/README.md#configuring
-        detached = vim.fn.has 'win32' == 0,
-      },
-    }
+    -- require('dap-go').setup {
+    --   delve = {
+    --     -- On Windows delve must be run attached or it crashes.
+    --     -- See https://github.com/leoluz/nvim-dap-go/blob/main/README.md#configuring
+    --     detached = vim.fn.has 'win32' == 0,
+    --   },
+    -- }
   end,
 }

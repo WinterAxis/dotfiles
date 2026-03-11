@@ -39,12 +39,12 @@ vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' }
 
 -- Highlight when yanking (copying) text
 --  Try it with `yap` in normal mode
---  See `:help vim.highlight.on_yank()`
+--  See `:help vim.hl.on_yank()`
 vim.api.nvim_create_autocmd('TextYankPost', {
   desc = 'Highlight when yanking (copying) text',
   group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
   callback = function()
-    vim.highlight.on_yank()
+    vim.hl.on_yank()
   end,
 })
 
@@ -75,4 +75,12 @@ vim.keymap.set('n', '<C-l>', '<cmd>lprev<CR>zz', { desc = 'Move focus to the rig
 -- Code Block
 vim.keymap.set('n', '<leader>cr', ':r!<C-R><C-L><CR>', { desc = '[C]ode [R]un: Run the current line' })
 vim.keymap.set('n', '<leader>cb', "'[V']c```<CR><C-r>\"```<Esc>'[zz", { desc = '[C]ode [B]lock around last insert or paste' })
+
+-- Spelling
+-- vim.keymap.set('n', '<leader>ts', ':set spell!<CR>', { desc = '[T]oggle [S]pelling' })
+vim.keymap.set('n', '<leader>ts', function()
+  vim.opt.spell = not vim.opt.spell:get()
+end, { desc = '[T]oggle [S]pelling' })
+
+
 -- vim: ts=2 sts=2 sw=2 et
